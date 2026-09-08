@@ -18,7 +18,8 @@ RUN corepack enable && mkdir -p /data && chown -R node:node /data /app
 
 COPY --from=build /app/package.json /app/pnpm-lock.yaml ./
 COPY --from=build /app/patches ./patches
-RUN pnpm install --prod --frozen-lockfile
+# vite.ts is imported by the server entrypoint, so keep devDependencies in runtime.
+RUN pnpm install --prod=false --frozen-lockfile
 
 COPY --from=build /app/dist ./dist
 COPY --from=build /app/data ./data
